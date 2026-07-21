@@ -1,0 +1,80 @@
+{
+  "name": "automation-hub",
+  "displayName": "Automation Hub",
+  "description": "Run engineering automations from VS Code",
+  "version": "0.0.1",
+  "publisher": "local",
+    "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mevirajsheoran/automation-hub"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "automation-hub-sidebar",
+          "title": "Automation Hub",
+          "icon": "$(zap)"
+        }
+      ]
+    },
+    "views": {
+      "automation-hub-sidebar": [
+        {
+          "id": "automationList",
+          "name": "Automations",
+          "when": "true"
+        }
+      ]
+    },
+    "chatParticipants": [
+      {
+        "id": "automation-hub",
+        "name": "automation-hub",
+        "fullName": "Automation Hub",
+        "description": "Run engineering automations",
+        "isSticky": true
+      }
+    ],
+    "configuration": {
+      "title": "Automation Hub",
+      "properties": {
+        "automationHub.githubToken": {
+          "type": "string",
+          "default": "",
+          "description": "Your GitHub Personal Access Token (with repo and workflow scopes). Leave empty to set it on first run."
+        },
+        "automationHub.repository": {
+          "type": "string",
+          "default": "mevirajsheoran/automation-hub",
+          "description": "The GitHub repository that contains the automations (format: owner/repo)."
+        },
+        "automationHub.catalogUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/mevirajsheoran/automation-hub/main/catalog.json",
+          "description": "URL where catalog.json can be fetched from."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}
