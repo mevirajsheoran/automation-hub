@@ -1,0 +1,30 @@
+# Environment and secrets
+.env
+backend/.env
+vscode-extension/.env
+
+# Node / VS Code Extension
+node_modules/
+vscode-extension/node_modules/
+vscode-extension/out/
+vscode-extension/*.vsix
+
+# Python (from the old backend, if you still have it)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker (from the old observability, if you still have it)
+observability/grafana/data/
