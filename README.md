@@ -14,7 +14,7 @@ Automation Hub is a standardized execution platform for engineering automations.
 ```mermaid
 flowchart TB
 	vscode[VS Code on Engineer Machine] --> sidebar[Sidebar Panel]
-	vscode --> chat[@automation-hub Chat Participant]
+	vscode --> chat["@automation-hub Chat Participant"]
 	vscode -->|HTTPS with PAT| github[GitHub.com]
 
 	github --> catalog[catalog.json]
