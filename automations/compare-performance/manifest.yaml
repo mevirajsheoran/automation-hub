@@ -1,0 +1,72 @@
+identity:
+  name: compare-performance
+  display_name: "Compare Performance"
+  description: "Compare execution performance between two build versions on a given taxonomy"
+  version: 1.0.0
+  owner: platform-team
+  tags:
+    - performance
+    - comparison
+    - builds
+    - reporting
+
+parameters:
+  - name: build_a
+    display_name: "Build A"
+    description: "First build version to compare"
+    type: string
+    required: true
+    example: "v1.2.0"
+
+  - name: build_b
+    display_name: "Build B"
+    description: "Second build version to compare"
+    type: string
+    required: true
+    example: "v1.3.0"
+
+  - name: taxonomy
+    display_name: "Taxonomy Version"
+    description: "Regulatory taxonomy version to run comparison against"
+    type: string
+    required: true
+    example: "4.2"
+    allowed_values:
+      - "3.2"
+      - "3.4"
+      - "4.0"
+      - "4.2"
+
+execution:
+  workflow: compare-performance.yml
+  estimated_duration: "3m"
+  async: false
+  timeout: "10m"
+
+permissions:
+  roles:
+    - developer
+    - lead
+    - admin
+  requires_approval: false
+
+outputs:
+  - name: comparison_report
+    type: artifact
+    filename: comparison_report.md
+    description: "Full performance comparison report in markdown"
+  - name: metrics
+    type: artifact
+    filename: metrics.json
+    description: "Structured metrics from the comparison run"
+
+discovery:
+  keywords:
+    - compare
+    - performance
+    - builds
+    - benchmark
+    - faster
+    - slower
+    - difference
+  category: performance

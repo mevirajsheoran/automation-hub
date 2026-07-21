@@ -1,0 +1,47 @@
+identity:
+  name: environment-check
+  display_name: "Environment Check"
+  description: "Verify that a developer environment is correctly configured"
+  version: 1.0.0
+  owner: platform-team
+  tags:
+    - environment
+    - validation
+    - health
+
+parameters:
+  - name: environment
+    display_name: "Environment Name"
+    description: "The environment namespace to check"
+    type: string
+    required: true
+    example: "dev-viraj-123"
+
+execution:
+  workflow: environment-check.yml
+  estimated_duration: "2m"
+  async: false
+  timeout: "5m"
+
+permissions:
+  roles:
+    - developer
+    - lead
+    - admin
+  requires_approval: false
+
+outputs:
+  - name: health_report
+    type: artifact
+    filename: health_report.md
+    description: "Environment health check report"
+
+discovery:
+  keywords:
+    - environment
+    - check
+    - health
+    - validate
+    - verify
+    - namespace
+  category: validation

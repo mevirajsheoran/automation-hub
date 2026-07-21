@@ -1,0 +1,76 @@
+name: Compare Performance
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_a:
+        description: "First build version (e.g. v1.2.0)"
+        required: true
+        type: string
+      build_b:
+        description: "Second build version (e.g. v1.3.0)"
+        required: true
+        type: string
+      taxonomy:
+        description: "Taxonomy version"
+        required: true
+        type: choice
+        options:
+          - "3.2"
+          - "3.4"
+          - "4.0"
+          - "4.2"
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t compare-performance \
+            -f automations/compare-performance/Dockerfile \
+            automations/compare-performance/
+
+      - name: Run comparison
+        run: |
+          mkdir -p /tmp/output
+
+          docker run --rm \
+            -e BUILD_A="${{ inputs.build_a }}" \
+            -e BUILD_B="${{ inputs.build_b }}" \
+            -e TAXONOMY="${{ inputs.taxonomy }}" \
+            -e OUTPUT_DIR="/output" \
+            -v /tmp/output:/output \
+            compare-performance
+
+      # The script writes to /output inside the container.
+      # /output is mounted to /tmp/output on the runner.
+      # So files are now in /tmp/output on the runner.
+      # We read comparison_report.md and append to
+      # GITHUB_STEP_SUMMARY to show it in the UI.
+      - name: Write step summary
+        if: always()
+        run: |
+          if [ -f /tmp/output/comparison_report.md ]; then
+            cat /tmp/output/comparison_report.md >> $GITHUB_STEP_SUMMARY
+            echo "✅ Report written to step summary."
+          else
+            echo "## ⚠️ Report not generated" >> $GITHUB_STEP_SUMMARY
+            echo "comparison_report.md was not found in /tmp/output"
+            ls -la /tmp/output/ || echo "/tmp/output is empty or does not exist"
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparison-report-${{ inputs.build_a }}-vs-${{ inputs.build_b }}
+          path: |
+            /tmp/output/comparison_report.md
+            /tmp/output/metrics.json
+          retention-days: 30
